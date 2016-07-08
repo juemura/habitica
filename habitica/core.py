@@ -32,7 +32,7 @@ except:
     import configparser
 
 
-VERSION = 'habitica version 0.0.12'
+VERSION = 'habitica version 0.0.13'
 TASK_VALUE_BASE = 0.9747  # http://habitica.wikia.com/wiki/Task_Value
 HABITICA_REQUEST_WAIT_TIME = 0.5  # time to pause between concurrent requests
 HABITICA_TASKS_PAGE = '/#/tasks'
@@ -40,46 +40,13 @@ HABITICA_TASKS_PAGE = '/#/tasks'
 PRIORITY = {'easy': 1,
             'medium': 1.5,
             'hard': 2}
-AUTH_CONF = os.path.expanduser('~') + '/.config/habitica/auth.cfg'
-CACHE_CONF = os.path.expanduser('~') + '/.config/habitica/cache.cfg'
+#AUTH_CONF = os.path.expanduser('~') + '/.config/habitica/auth.cfg'
+#CACHE_CONF = os.path.expanduser('~') + '/.config/habitica/cache.cfg'
+#AUTH_CONF = 'auth.cfg'
+CACHE_CONF = 'cache.cfg'
 
 SECTION_CACHE_QUEST = 'Quest'
 
-
-def load_auth(configfile):
-    """Get authentication data from the AUTH_CONF file."""
-
-    logging.debug('Loading habitica auth data from %s' % configfile)
-
-    try:
-        cf = open(configfile)
-    except IOError:
-        logging.error("Unable to find '%s'." % configfile)
-        exit(1)
-
-    config = configparser.SafeConfigParser()
-    config.readfp(cf)
-
-    cf.close()
-
-    # Get data from config
-    rv = {}
-    try:
-        rv = {'url': config.get('Habitica', 'url'),
-              'x-api-user': config.get('Habitica', 'login'),
-              'x-api-key': config.get('Habitica', 'password')}
-
-    except configparser.NoSectionError:
-        logging.error("No 'Habitica' section in '%s'" % configfile)
-        exit(1)
-
-    except configparser.NoOptionError as e:
-        logging.error("Missing option in auth file '%s': %s"
-                      % (configfile, e.message))
-        exit(1)
-
-    # Return auth data as a dictionnary
-    return rv
 
 
 def load_cache(configfile):
@@ -199,7 +166,9 @@ def cli():
                   ', '.join("'%s': '%s'" % (k, v) for k, v in args.items()))
 
     # Set up auth
-    auth = load_auth(AUTH_CONF)
+    auth = {'url': 'http://54.159.38.241:3000',
+              'x-api-user': 'ecda621c-931d-4bca-bb42-9b0eb99e0f24',
+              'x-api-key': '5bd1e69e-e074-43a9-a1a9-297c2fb371c8'}
 
     # Prepare cache
     cache = load_cache(CACHE_CONF)
